@@ -1,0 +1,43 @@
+name: Main Workflow
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+            issues: write
+            discussions: write
+            actions: write
+            packages: write
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+            - name: Install pnpm
+              run: npm install -g pnpm
+            - name: Install dependencies
+              run: pnpm install
+            - name: Run tests with coverage
+              run: pnpm run test:coverage
+            # - name: Vitest Coverage Report
+            #   if: always()
+            #   uses: davelosert/vitest-coverage-report-action@v2.8.2    
+            # - name: Publish Results Badge
+            #   uses: wjervis7/vitest-badge-action@v1.0.0
+            #   if: success() || failure()
+            #   with:
+            #     result-type: lines
+            #     gist-token: ${{ secrets.GIST_TOKEN }}
+            #     gist-url: https://gist.github.com/maxubrq/5e8582e7b60e6d8fa96aaf61a574502d
+            #     upload-badge: true
+            # - name: Build
+            #   run: pnpm run build
